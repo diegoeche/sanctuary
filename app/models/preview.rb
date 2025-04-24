@@ -8,11 +8,11 @@ class Preview
   def call(alert)
     currency_pair = alert.currency_pair
     data = get_rates(currency_pair)
+
+    # This 'cons' works similarly to the zip/offset idea.
     today_yesterday_values = data.each_cons(2).map { |yesterday, today| [today, yesterday] }
 
     result = today_yesterday_values.map do |today, yesterday|
-      p today
-      p currency_pair.first
       today_rate = today[currency_pair.first.to_sym][currency_pair.second.to_sym]
       yesterday_rate = yesterday[currency_pair.first.to_sym][currency_pair.second.to_sym]
       is_activated = operate(alert.operator, today_rate, yesterday_rate)
@@ -36,6 +36,7 @@ class Preview
   end
 
   def get_rates(currency_pair)
+    # Get 8 days. We need the "last day" yesterday
     (0..7).map do |days|
       client.exchange_on_date(currency_pair.first, DateTime.now - days)
     end
