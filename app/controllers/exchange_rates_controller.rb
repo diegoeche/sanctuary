@@ -8,4 +8,8 @@ class ExchangeRatesController < ApplicationController
   def index
     render json: EXCHANGE_RATES
   end
+
+  def show
+    render json: EXCHANGE_RATES.filter { |x| x.first == params[:id] }
+  end
 end
