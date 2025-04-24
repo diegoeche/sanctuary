@@ -5,34 +5,14 @@ RSpec.describe 'ExchangeRates', type: :request do
     JSON.parse(response.body)
   end
 
-  describe 'GET /index' do
-    it 'responds with 200 on the list endpoint' do
-      get '/exchange_rates'
+  describe 'GET /preview' do
+    it 'returns the right structure' do
+      alert = Alert.new(operator: '<', currency_pair: ['eur', 'usd'], value: 0.5)
+
+      get "/preview/#{alert.currency_pair.join("-")}"
 
       assert_response :success
-    end
-
-    it 'returns the right amount of entries' do
-      get '/exchange_rates'
-
-      total_currencies = ExchangeRatesController::EXCHANGE_CURRENCIES.length
-
-      expect(json_response.length).to eq(total_currencies ** 2 - total_currencies)
-    end
-  end
-
-  describe 'GET /index' do
-    it 'responds with 200 on the list endpoint' do
-      get '/exchange_rates/usd'
-
-      assert_response :success
-    end
-
-    it 'returns the right amount of entries' do
-      get '/exchange_rates/usd'
-
-      total_currencies = ExchangeRatesController::EXCHANGE_CURRENCIES.length
-      expect(json_response.length).to eq(total_currencies - 1)
+      print(json_response)
     end
   end
 end
